@@ -518,11 +518,11 @@ function gestLabelFor(dateObj, fumDateObj){
 // en el extremo más cercano. Si en algún momento se suman más puntos
 // de referencia (por ej. semana 20), conviene partir la curva en más
 // tramos para que sea más precisa en el medio.
-const SIZE_ANCHORS = { t1: 6, l1: 0.28, t2: 8, l2: 1.65, t3: 40, l3: 50 };
+const SIZE_ANCHORS = { t1: 6, l1: 0.28, t2: 8, l2: 1.65, t3: 12, l3: 5.5, t4: 40, l4: 50 };
 
 function fetalSizeCm(gestDaysExact){
   const t = gestDaysExact / 7; // semana de gestación, en decimales
-  const { t1, l1, t2, l2, t3, l3 } = SIZE_ANCHORS;
+  const { t1, l1, t2, l2, t3, l3, t4, l4 } = SIZE_ANCHORS;
   if (t <= t1) return l1;
   if (t <= t2){
     const k = Math.log(l2 / l1) / (t2 - t1);
@@ -533,7 +533,12 @@ function fetalSizeCm(gestDaysExact){
     const a = l2 / Math.pow(t2, b);
     return a * Math.pow(t, b);
   }
-  return l3;
+  if (t <= t4){
+    const b = Math.log(l4 / l3) / Math.log(t4 / t3);
+    const a = l3 / Math.pow(t3, b);
+    return a * Math.pow(t, b);
+  }
+  return l4;
 }
 
 // Objetos de referencia (tamaño típico en cm) para comparar el resultado.
