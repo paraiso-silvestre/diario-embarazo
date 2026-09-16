@@ -420,7 +420,7 @@ embarazo:
     - fecha: 2026-09-09
       estudio: "Eco. TN PLUS"
       preparacion: "No requiere preparación."
-      estado: pendiente
+      estado: realizado
       link: null
 
   salud:
@@ -518,7 +518,7 @@ function gestLabelFor(dateObj, fumDateObj){
 // en el extremo más cercano. Si en algún momento se suman más puntos
 // de referencia (por ej. semana 20), conviene partir la curva en más
 // tramos para que sea más precisa en el medio.
-const SIZE_ANCHORS = { t1: 6, l1: 0.28, t2: 8, l2: 1.65, t3: 12, l3: 5.5, t4: 40, l4: 50 };
+const SIZE_ANCHORS = { t1: 6, l1: 0.28, t2: 8, l2: 1.65, t3: 12, l3: 5.5, t4:20, l4:16, t5: 30, l5: 27.5, t6:40, l6:35 };
 
 function fetalSizeCm(gestDaysExact){
   const t = gestDaysExact / 7; // semana de gestación, en decimales
@@ -538,7 +538,18 @@ function fetalSizeCm(gestDaysExact){
     const a = l3 / Math.pow(t3, b);
     return a * Math.pow(t, b);
   }
-  return l4;
+  if (t <= t5){
+    const b = Math.log(l5 / l4) / Math.log(t5 / t4);
+    const a = l4 / Math.pow(t4, b);
+    return a * Math.pow(t, b);
+  }
+  if (t <= t6){
+    const b = Math.log(l6 / l5) / Math.log(t6 / t5);
+    const a = l5 / Math.pow(t5, b);
+    return a * Math.pow(t, b);
+  }
+  
+  return l6;
 }
 
 // Objetos de referencia (tamaño típico en cm) para comparar el resultado.
